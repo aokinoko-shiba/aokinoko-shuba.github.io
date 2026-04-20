@@ -9,6 +9,8 @@
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
+            --calc-color: #e67e22;
+            --ai-color: #9b59b6;
             --bg-color: #f8f9fa;
             --text-color: #333333;
             --card-bg: #ffffff;
@@ -71,92 +73,92 @@
             padding-bottom: 0.5rem;
         }
 
-        .about-section p {
-            font-size: 1.1rem;
-            color: #555;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* 作品集區塊 */
-        .portfolio-section h2 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
+        /* 作品集網格系統 */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            /* 在桌面端顯示 2x2 */
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
         }
 
         /* 單個作品卡片 */
         .project-card {
             background-color: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
-            padding: 2rem;
+            border-radius: 15px;
+            padding: 2.5rem;
             text-decoration: none;
             color: inherit;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            text-align: center;
+            border-top: 5px solid transparent;
         }
 
         .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
         }
 
         .project-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
         }
 
         .project-card h3 {
-            color: var(--secondary-color);
-            margin-bottom: 0.5rem;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
         }
 
         .project-card p {
             color: #666;
             margin-bottom: 1.5rem;
+            min-height: 3em;
         }
 
-        .play-btn {
-            background-color: var(--secondary-color);
+        /* 各別按鈕樣式 */
+        .btn {
             color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 5px;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
             font-weight: bold;
-            transition: background-color 0.3s;
+            width: 80%;
+            transition: opacity 0.3s;
         }
 
-        .project-card:hover .play-btn {
-            background-color: #2980b9;
+        /* 1. 打地鼠樣式 */
+        .card-mole { border-top-color: var(--secondary-color); }
+        .btn-mole { background-color: var(--secondary-color); }
+
+        /* 2. 貪吃蛇樣式 */
+        .card-snake { border-top-color: #2ecc71; }
+        .btn-snake { background-color: #2ecc71; }
+
+        /* 3. 計算機樣式 */
+        .card-calc { border-top-color: var(--calc-color); }
+        .btn-calc { background-color: var(--calc-color); }
+
+        /* 4. AI 機器人樣式 */
+        .card-ai { border-top-color: var(--ai-color); }
+        .btn-ai { background-color: var(--ai-color); }
+
+        .project-card:hover .btn {
+            opacity: 0.9;
         }
 
         /* 頁尾 */
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem;
             color: #777;
-            margin-top: 2rem;
         }
 
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            .about-section {
-                padding: 1.5rem;
+        /* 手機版適應 */
+        @media (max-width: 600px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -165,43 +167,53 @@
 
     <header>
         <h1>何玴瑋</h1>
-        <p>Game Developer & Tech Enthusiast</p>
+        <p>Game Developer & AI Tech Enthusiast</p>
     </header>
 
     <div class="container">
         <section class="about-section">
-            <h2>關於我</h2>
+            <h2>個人專案展示</h2>
             <p>
-                哈囉！我是何玴瑋。<br>
-                我熱衷於程式開發與技術探索，平時喜歡研究 Python 自動化工具開發與 GUI 介面設計，同時對電腦硬體及 AI 模型訓練（如 Stable Diffusion 和 LoRA）抱有濃厚的興趣。<br>
-                這裡展示了我近期實作的兩款經典網頁小遊戲，歡迎點擊遊玩！
+                歡迎來到我的作品集！這裡整合了我開發的經典遊戲與智慧型工具。<br>
+                從前端邏輯到 AI API 的串接應用，展示我對技術的熱忱與實踐。
             </p>
         </section>
 
-        <section class="portfolio-section">
-            <h2>遊戲作品</h2>
-            <div class="projects-grid">
-                
-                <a href="1/index.html" class="project-card">
-                    <div class="project-icon">🐹</div>
-                    <h3>打地鼠</h3>
-                    <p>經典考驗反應力的打地鼠遊戲，看看你能拿多少分！</p>
-                    <span class="play-btn">點擊遊玩</span>
-                </a>
+        <div class="projects-grid">
+            
+            <a href="1/index.html" class="project-card card-mole">
+                <div class="project-icon">🐹</div>
+                <h3 style="color: var(--secondary-color);">打地鼠遊戲</h3>
+                <p>考驗反應速度的經典小遊戲，挑戰你的最高分數！</p>
+                <span class="btn btn-mole">開始挑戰</span>
+            </a>
 
-                <a href="2/snake.html" class="project-card">
-                    <div class="project-icon">🐍</div>
-                    <h3>貪吃蛇</h3>
-                    <p>復古經典的貪吃蛇，挑戰生存時間與極限長度！</p>
-                    <span class="play-btn">點擊遊玩</span>
-                </a>
+            <a href="2/snake.html" class="project-card card-snake">
+                <div class="project-icon">🐍</div>
+                <h3 style="color: #2ecc71;">復古貪吃蛇</h3>
+                <p>運用鍵盤操控，吃掉紅點不斷增長，挑戰生存極限。</p>
+                <span class="btn btn-snake">立即遊玩</span>
+            </a>
 
-            </div>
-        </section>
+            <a href="calculator/index.html" class="project-card card-calc">
+                <div class="project-icon">🧮</div>
+                <h3 style="color: var(--calc-color);">工程計算機</h3>
+                <p>支援三角函數與進階對數運算，簡潔高效的工具軟體。</p>
+                <span class="btn btn-calc">開啟工具</span>
+            </a>
+
+            <a href="ai-chat/index.html" class="project-card card-ai">
+                <div class="project-icon">✨</div>
+                <h3 style="color: var(--ai-color);">AI 智慧助理</h3>
+                <p>基於 Gemini 2.5 Flash 模型，實現即時智能對話功能。</p>
+                <span class="btn btn-ai">發起對話</span>
+            </a>
+
+        </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 何玴瑋. All Rights Reserved.</p>
+        <p>&copy; 2026 何玴瑋. 使用 HTML / CSS / JS & Gemini API 開發</p>
     </footer>
 
 </body>
