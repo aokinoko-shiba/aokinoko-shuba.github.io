@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的工程計算機</title>
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+
+        #calculator {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 340px;
+        }
+
+        #display-container {
+            margin-bottom: 20px;
+        }
+
+        #mode-indicator {
+            text-align: right;
+            font-size: 14px;
+            color: #7f8c8d;
+            height: 20px;
+            margin-bottom: 5px;
+        }
+
+        #display {
+            width: 100%;
+            height: 60px;
+            font-size: 40px;
+            text-align: right;
+            border: none;
+            outline: none;
+            background-color: #fcfcfc;
+            color: #2c3e50;
+        }
+
+        #buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        button {
+            height: 65px;
+            border-radius: 15px;
+            border: none;
+            font-size: 22px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        button:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+
+        /* 數字鍵 */
+        .btn-num {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        /* 運算符號 */
+        .btn-op {
+            background-color: #f9a826;
+            color: white;
+            font-size: 26px;
+        }
+
+        /* 工程函數 */
+        .btn-func {
+            background-color: #6c757d;
+            color: white;
+            font-size: 18px;
+        }
+
+        /* 特殊鍵 (AC, =) */
+        .btn-special {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .btn-eq {
+            background-color: #5cb85c;
+            color: white;
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+
+<div id="calculator">
+    <div id="display-container">
+        <div id="mode-indicator">角度模式 (Deg)</div>
+        <input type="text" id="display" readonly value="0">
+    </div>
+    
+    <div id="buttons">
+        <button class="btn-func" onclick="toggleMode()" id="mode-btn">Deg</button>
+        <button class="btn-func" onclick="mathFunc('sin')">sin</button>
+        <button class="btn-func" onclick="mathFunc('cos')">cos</button>
+        <button class="btn-special" onclick="clearDisplay()">AC</button>
+        
+        <button class="btn-func" onclick="mathFunc('tan')">tan</button>
+        <button class="btn-func" onclick="mathFunc('log')">log</button>
+        <button class="btn-func" onclick="mathFunc('ln')">ln</button>
+        <button class="btn-op" onclick="appendOperator('/')">÷</button>
+
+        <button class="btn-num" onclick="appendNumber('7')">7</button>
+        <button class="btn-num" onclick="appendNumber('8')">8</button>
+        <button class="btn-num" onclick="appendNumber('9')">9</button>
+        <button class="btn-op" onclick="appendOperator('*')">×</button>
+
+        <button class="btn-num" onclick="appendNumber('4')">4</button>
+        <button class="btn-num" onclick="appendNumber('5')">5</button>
+        <button class="btn-num" onclick="appendNumber('6')">6</button>
+        <button class="btn-op" onclick="appendOperator('-')">-</button>
+
+        <button class="btn-num" onclick="appendNumber('1')">1</button>
+        <button class="btn-num" onclick="appendNumber('2')">2</button>
+        <button class="btn-num" onclick="appendNumber('3')">3</button>
+        <button class="btn-op" onclick="appendOperator('+')">+</button>
+
+        <button class="btn-num" onclick="appendNumber('0')">0</button>
+        <button class="btn-num" onclick="appendNumber('.')">.</button>
+        <button class="btn-special btn-eq" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+    let currentInput = "0";
+    let isDegreeMode = true; // 預設為角度模式
+
+    // 更新顯示螢幕
+    function updateDisplay() {
+        document.getElementById('display').value = currentInput;
+    }
+
+    // 更新模式指示器
+    function updateModeIndicator() {
+        const indicator = document.getElementById('mode-indicator');
+        const btn = document.getElementById('mode-btn');
+        indicator.textContent = isDegreeMode ? "角度模式 (Deg)" : "弧度模式 (Rad)";
+        btn.textContent = isDegreeMode ? "Deg" : "Rad";
+    }
+
+    // 切換角度/弧度模式
+    function toggleMode() {
+        isDegreeMode = !isDegreeMode;
+        updateModeIndicator();
+    }
+
+    // 清除螢幕 (AC)
+    function clearDisplay() {
+        currentInput = "0";
+        updateDisplay();
+    }
+
+    // 輸入數字
+    function appendNumber(number) {
+        if (currentInput === "0" && number !== ".") {
+            currentInput = number;
+        } else {
+            // 防止輸入多個小數點
+            if (number === "." && currentInput.includes(".")) return;
+            currentInput += number;
+        }
+        updateDisplay();
+    }
+
+    // 輸入運算符號 (+, -, *, /)
+    function appendOperator(operator) {
+        currentInput += " " + operator + " ";
+        updateDisplay();
+    }
+
+    // 計算普通算式 (=)
+    function calculate() {
+        try {
+            currentInput = eval(currentInput).toString();
+        } catch (error) {
+            currentInput = "Error";
+        }
+        updateDisplay();
+    }
+
+    // 工程函數計算 (sin, cos, log, etc.)
+    function mathFunc(func) {
+        let value = parseFloat(currentInput);
+        
+        // 檢查輸入是否有效
+        if (isNaN(value)) {
+            currentInput = "Error";
+            updateDisplay();
+            return;
+        }
+
+        let result;
+        switch(func) {
+            case 'sin':
+                // 核心功能：角度模式下 sin(30)=0.5
+                if (isDegreeMode) {
+                    result = Math.sin(value * (Math.PI / 180));
+                } else {
+                    result = Math.sin(value);
+                }
+                break;
+            case 'cos':
+                if (isDegreeMode) {
+                    result = Math.cos(value * (Math.PI / 180));
+                } else {
+                    result = Math.cos(value);
+                }
+                break;
+            case 'tan':
+                if (isDegreeMode) {
+                    result = Math.tan(value * (Math.PI / 180));
+                } else {
+                    result = Math.tan(value);
+                }
+                break;
+            case 'log': // 常用對數 log10
+                result = Math.log10(value);
+                break;
+            case 'ln': // 自然對數 ln
+                result = Math.log(value);
+                break;
+        }
+        
+        // 格式化結果，避免浮點數誤差 (例如 sin(30) 出現 0.49999999999999994)
+        currentInput = parseFloat(result.toFixed(10)).toString();
+        updateDisplay();
+    }
+</script>
+
+</body>
+</html>
