@@ -11,6 +11,7 @@
             --secondary-color: #3498db;
             --calc-color: #e67e22;
             --ai-color: #9b59b6;
+            --chat-color: #ea580c; /* 新增：ntfy 聊天對話窗的專屬橘色 */
             --bg-color: #f8f9fa;
             --text-color: #333333;
             --card-bg: #ffffff;
@@ -76,7 +77,7 @@
         /* 作品集網格系統 */
         .projects-grid {
             display: grid;
-            /* 在桌面端顯示 2x2 */
+            /* 在桌面端顯示 2x2 或依空間自動排列 */
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
         }
@@ -144,6 +145,10 @@
         .card-ai { border-top-color: var(--ai-color); }
         .btn-ai { background-color: var(--ai-color); }
 
+        /* 5. ntfy 聊天室樣式 (新加入) */
+        .card-chat { border-top-color: var(--chat-color); }
+        .btn-chat { background-color: var(--chat-color); }
+
         .project-card:hover .btn {
             opacity: 0.9;
         }
@@ -181,6 +186,15 @@
 
         <div class="projects-grid">
             
+            <!-- 新增的：ntfy 聊天對話窗 -->
+            <a href="chat/index.html" class="project-card card-chat">
+                <div class="project-icon">💬</div>
+                <h3 style="color: var(--chat-color);">ntfy 聊天對話窗</h3>
+                <p>深色賽博龐克風格介面，整合 ntfy.sh 即時推播服務。</p>
+                <span class="btn btn-chat">進入聊天室</span>
+            </a>
+
+            <!-- 原有的專案 -->
             <a href="1/index.html" class="project-card card-mole">
                 <div class="project-icon">🐹</div>
                 <h3 style="color: var(--secondary-color);">打地鼠遊戲</h3>
