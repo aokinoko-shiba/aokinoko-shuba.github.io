@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aokinoko Chat - ntfy.sh Client</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Microsoft JhengHei', sans-serif;
+            background-color: #0c0a09;
+        }
+        
+        /* 玻璃毛玻璃卡片效果 */
+        .glass-card {
+            background: rgba(28, 25, 23, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* 橘色光暈 */
+        .orange-glow {
+            box-shadow: 0 0 20px 2px rgba(234, 88, 12, 0.3);
+        }
+        
+        /* 自定義捲軸 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #292524;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="text-gray-300 h-screen overflow-hidden">
+
+    <div class="flex h-full">
+        <aside class="w-80 border-r border-[#292524] flex flex-col p-6 gap-6 overflow-y-auto custom-scrollbar">
+            
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-orange-600 flex items-center justify-center text-white text-xl font-bold orange-glow">
+                    5
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg tracking-tight">聊天對話窗</h1>
+                    <p class="text-xs text-gray-500">一個可互動的乾淨介面...</p>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xs font-bold text-gray-400">ntfy.sh 設定</h2>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[11px] text-gray-500">推播頻道 (Topic)</label>
+                    <input id="topicInput" type="text" value="aokinoko" 
+                        class="w-full bg-[#0c0a09] border border-[#292524] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-600 transition-colors">
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 space-y-4">
+                <h2 class="text-xs font-bold text-gray-400">聊天概況</h2>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-[#0c0a09] p-3 rounded-xl border border-[#292524]">
+                        <span class="text-[10px] text-gray-500 block">在線狀態</span>
+                        <span class="text-sm font-semibold text-white">已連線</span>
+                    </div>
+                    <div class="bg-[#0c0a09] p-3 rounded-xl border border-[#292524]">
+                        <span class="text-[10px] text-gray-500 block">模式</span>
+                        <span class="text-sm font-semibold text-white">聊天</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-auto">
+                <h2 class="text-xs font-bold text-gray-400 mb-2">聯絡人</h2>
+                <div class="glass-card rounded-2xl p-3 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-orange-600/10 flex items-center justify-center">
+                        <span class="text-orange-600 font-bold">UX</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-xs font-bold text-white">視覺夥伴</div>
+                        <div class="text-[10px] text-gray-500">提供配色與互動提示</div>
+                    </div>
+                    <div class="w-2 h-2 rounded-full bg-orange-600"></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col relative bg-[#0c0a09]">
+            
+            <header class="h-20 border-b border-[#292524] flex items-center justify-between px-8 z-10">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-teal-800 flex items-center justify-center text-white font-bold">S</div>
+                    <div>
+                        <div class="text-white font-semibold" id="displayTopic">Sam 聊天視窗</div>
+                        <div class="text-[11px] text-gray-500">即時連線 • 128 位元安全連線</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="px-4 py-1.5 rounded-full border border-[#292524] text-xs font-semibold hover:bg-[#1c1917] text-white">搜尋</button>
+                    <button class="px-4 py-1.5 rounded-full border border-[#292524] text-xs font-semibold hover:bg-[#1c1917] text-white">詳情</button>
+                    <button class="px-4 py-1.5 rounded-full border border-[#292524] text-xs font-semibold hover:bg-[#1c1917] text-white">更多</button>
+                </div>
+            </header>
+
+            <div id="messageDisplay" class="flex-1 overflow-y-auto p-8 flex flex-col gap-6 custom-scrollbar">
+                <div class="flex justify-center mt-auto mb-4">
+                    <span class="px-4 py-1.5 bg-[#1c1917] border border-[#292524] rounded-full text-[11px] text-gray-400">今天</span>
+                </div>
+                
+                <div class="mx-auto w-full max-w-xl glass-card p-6 rounded-2xl text-center mb-6">
+                    <p class="text-sm text-gray-400 mb-4">尚無訊息，請輸入內容並送出，或等待 <span id="topicHint" class="text-orange-500">aokinoko</span> 頻道的新訊息。</p>
+                    <div class="text-[10px] text-gray-600 text-left">系統 • 現在</div>
+                </div>
+            </div>
+
+            <div class="p-8 pt-0">
+                <div class="max-w-4xl mx-auto space-y-4">
+                    
+                    <div class="flex gap-2">
+                        <button class="px-4 py-1.5 rounded-full border border-[#292524] text-xs text-gray-300 hover:bg-[#1c1917]">更自然</button>
+                        <button class="px-4 py-1.5 rounded-full border border-[#292524] text-xs text-gray-300 hover:bg-[#1c1917]">頁面優化</button>
+                        <button class="px-4 py-1.5 rounded-full border border-[#292524] text-xs text-gray-300 hover:bg-[#1c1917]">標題建議</button>
+                    </div>
+
+                    <div class="bg-[#1c1917] border border-[#292524] rounded-full p-2 flex items-center gap-2">
+                        <button class="w-10 h-10 rounded-full bg-[#0c0a09] flex items-center justify-center border border-[#292524] ml-1">
+                            <i class="fa-solid fa-plus text-gray-400"></i>
+                        </button>
+                        <input id="messageInput" type="text" placeholder="輸入訊息，按 Enter 送出，Shift+Enter 換行" 
+                            class="flex-1 bg-transparent border-none outline-none text-sm px-2 text-white placeholder-gray-600">
+                        <button id="sendBtn" class="bg-orange-600 hover:bg-orange-500 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-colors mr-1">
+                            送出
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const topicInput = document.getElementById('topicInput');
+        const topicHint = document.getElementById('topicHint');
+        const messageDisplay = document.getElementById('messageDisplay');
+
+        // 當使用者更改左側 Topic 時，同步更新畫面上的提示
+        topicInput.addEventListener('input', () => {
+            topicHint.innerText = topicInput.value || 'aokinoko';
+        });
+
+        // 處理發送訊息的邏輯
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            const topic = topicInput.value.trim() || 'aokinoko';
+
+            if (!message) return;
+
+            // 改變按鈕狀態，防止重複點擊
+            sendBtn.disabled = true;
+            sendBtn.innerText = '傳送中...';
+            sendBtn.classList.add('opacity-50');
+
+            try {
+                // 實作 ntfy.sh 標準 HTTPS POST 請求
+                const response = await fetch(`https://ntfy.sh/${topic}`, {
+                    method: 'POST',
+                    body: message,
+                    headers: {
+                        'Title': '來自 Web UI 的新訊息',
+                        'Tags': 'speech_balloon' // 給 ntfy 的小圖示
+                    }
+                });
+
+                if (response.ok) {
+                    // 若傳送成功，將訊息顯示在畫面上
+                    appendMessageToChat(message);
+                    messageInput.value = ''; // 清空輸入框
+                } else {
+                    alert('發送至 ntfy.sh 失敗，請重試。');
+                }
+            } catch (error) {
+                console.error('發送錯誤:', error);
+                alert('網路錯誤，請檢查您的連線。');
+            } finally {
+                // 恢復按鈕狀態
+                sendBtn.disabled = false;
+                sendBtn.innerText = '送出';
+                sendBtn.classList.remove('opacity-50');
+            }
+        }
+
+        // 將訊息渲染到對話視窗中
+        function appendMessageToChat(text) {
+            const msgContainer = document.createElement('div');
+            msgContainer.className = 'flex justify-end mb-4';
+            
+            const timeString = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+
+            msgContainer.innerHTML = `
+                <div class="max-w-[70%] bg-[#2a1708] border border-orange-900/50 text-white px-5 py-3 rounded-2xl rounded-tr-sm text-sm shadow-lg">
+                    ${text}
+                    <div class="text-[10px] text-orange-600/60 text-right mt-1">${timeString}</div>
+                </div>
+            `;
+            messageDisplay.appendChild(msgContainer);
+            
+            // 自動捲動到底部
+            messageDisplay.scrollTop = messageDisplay.scrollHeight;
+        }
+
+        // 綁定點擊事件
+        sendBtn.addEventListener('click', sendMessage);
+
+        // 綁定鍵盤 Enter 事件
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
