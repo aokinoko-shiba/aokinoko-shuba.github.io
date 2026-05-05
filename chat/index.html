@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aokinoko Chat - AI Bot</title>
+    <title>多人連線聊天室</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -20,52 +20,63 @@
 <body class="text-gray-300 h-screen overflow-hidden">
 
     <div class="flex h-full">
-        <!-- 左側邊欄 -->
+        <!-- ================= 左側設定欄 ================= -->
         <aside class="w-80 border-r border-[#292524] flex flex-col p-6 gap-6 overflow-y-auto custom-scrollbar">
+            
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-full bg-orange-600 flex items-center justify-center text-white text-xl font-bold orange-glow">5</div>
+                <div class="w-12 h-12 rounded-full bg-orange-600 flex items-center justify-center text-white text-xl font-bold orange-glow">
+                    <i class="fa-solid fa-users"></i>
+                </div>
                 <div>
-                    <h1 class="text-white font-bold text-lg tracking-tight">聊天對話窗</h1>
-                    <p class="text-xs text-gray-500">一個可互動的乾淨介面...</p>
+                    <h1 class="text-white font-bold text-lg tracking-tight">多人聊天群組</h1>
+                    <p class="text-xs text-gray-500">即時同步連線中...</p>
                 </div>
             </div>
 
             <div class="glass-card rounded-2xl p-4 space-y-4">
-                <h2 class="text-xs font-bold text-gray-400">連線狀態</h2>
-                <div class="grid grid-cols-2 gap-2">
-                    <div class="bg-[#0c0a09] p-3 rounded-xl border border-[#292524]">
-                        <span class="text-[10px] text-gray-500 block">對象</span>
-                        <span class="text-sm font-semibold text-white">Sam 機器人</span>
-                    </div>
-                    <div class="bg-[#0c0a09] p-3 rounded-xl border border-[#292524]">
-                        <span class="text-[10px] text-gray-500 block">模式</span>
-                        <span class="text-sm font-semibold text-white">自動回覆</span>
-                    </div>
+                <h2 class="text-xs font-bold text-gray-400">個人與群組設定</h2>
+                
+                <div class="space-y-2">
+                    <label class="text-[11px] text-gray-500">你的暱稱</label>
+                    <input id="nicknameInput" type="text" value="玩家1" placeholder="輸入你的名字"
+                        class="w-full bg-[#0c0a09] border border-[#292524] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-600 transition-colors">
                 </div>
+
+                <div class="space-y-2 mt-3">
+                    <label class="text-[11px] text-gray-500">群組房號 (Topic) - 相同房號即可群聊</label>
+                    <input id="topicInput" type="text" value="aokinoko-room" 
+                        class="w-full bg-[#0c0a09] border border-[#292524] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-600 transition-colors">
+                </div>
+                
+                <button id="reconnectBtn" class="w-full mt-2 bg-[#292524] hover:bg-[#3f3936] text-white text-xs py-2 rounded-lg transition-colors">
+                    重新連線此房間
+                </button>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xs font-bold text-gray-400">連線狀態</h2>
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                </div>
+                <p class="text-xs text-gray-400" id="statusText">已連線至接收伺服器，等待訊息中...</p>
             </div>
         </aside>
 
-        <!-- 右側主畫面 -->
+        <!-- ================= 右側聊天視窗 ================= -->
         <main class="flex-1 flex flex-col relative bg-[#0c0a09]">
             
-            <header class="h-20 border-b border-[#292524] flex items-center justify-between px-8 z-10">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-teal-800 flex items-center justify-center text-white font-bold">S</div>
-                    <div>
-                        <div class="text-white font-semibold">Sam 聊天視窗</div>
-                        <div class="text-[11px] text-green-500">● 機器人已在線，準備好聊天了！</div>
-                    </div>
+            <header class="h-20 border-b border-[#292524] flex items-center px-8 z-10">
+                <div>
+                    <div class="text-white font-semibold text-lg" id="displayRoomName">公開群組：aokinoko-room</div>
+                    <div class="text-[11px] text-green-500">🟢 伺服器即時廣播中</div>
                 </div>
             </header>
 
-            <div id="messageDisplay" class="flex-1 overflow-y-auto p-8 flex flex-col gap-4 custom-scrollbar">
-                <div class="flex justify-center mt-auto mb-4">
-                    <span class="px-4 py-1.5 bg-[#1c1917] border border-[#292524] rounded-full text-[11px] text-gray-400">今天</span>
-                </div>
-                
-                <!-- 初始系統訊息 -->
-                <div class="mx-auto w-full max-w-xl glass-card p-6 rounded-2xl text-center mb-6" id="welcomeMsg">
-                    <p class="text-sm text-gray-400 mb-4">跟 Sam 說聲 Hello 吧！</p>
+            <div id="messageDisplay" class="flex-1 overflow-y-auto p-8 flex flex-col gap-6 custom-scrollbar">
+                <!-- 聊天訊息會動態出現在這裡 -->
+                <div class="mx-auto w-full max-w-xl glass-card p-6 rounded-2xl text-center mb-6 border-orange-900/30">
+                    <p class="text-sm text-gray-300 mb-2">🎉 歡迎來到多人聊天室！</p>
+                    <p class="text-xs text-gray-500">你可以把這個網頁傳給朋友，只要確保左側的「群組房號」一樣，就可以互相看到訊息囉！</p>
                 </div>
             </div>
 
@@ -76,8 +87,8 @@
                         <button class="w-10 h-10 rounded-full bg-[#0c0a09] flex items-center justify-center border border-[#292524] ml-1">
                             <i class="fa-solid fa-plus text-gray-400"></i>
                         </button>
-                        <input id="messageInput" type="text" placeholder="輸入訊息，按 Enter 送出..." class="flex-1 bg-transparent border-none outline-none text-sm px-2 text-white placeholder-gray-600">
-                        <button id="sendBtn" class="bg-orange-600 hover:bg-orange-500 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-colors mr-1">
+                        <input id="messageInput" type="text" placeholder="輸入訊息，按 Enter 傳送到群組..." class="flex-1 bg-transparent border-none outline-none text-sm px-2 text-white placeholder-gray-600">
+                        <button id="sendBtn" class="bg-orange-600 hover:bg-orange-500 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-colors mr-1 shadow-lg shadow-orange-900/50">
                             送出
                         </button>
                     </div>
@@ -86,88 +97,143 @@
         </main>
     </div>
 
-    <!-- ================= 機器人聊天邏輯 ================= -->
+    <!-- ================= 核心邏輯 (即時連線 & 接收) ================= -->
     <script>
+        // 產生一個隨機 ID 代表當前的網頁，用來避免收到「自己剛剛發出去的訊息」
+        const myClientId = Math.random().toString(36).substring(2, 15);
+        let eventSource = null; // 用來保持連線的物件
+
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
+        const nicknameInput = document.getElementById('nicknameInput');
+        const topicInput = document.getElementById('topicInput');
+        const displayRoomName = document.getElementById('displayRoomName');
         const messageDisplay = document.getElementById('messageDisplay');
-        const welcomeMsg = document.getElementById('welcomeMsg');
+        const statusText = document.getElementById('statusText');
+        const reconnectBtn = document.getElementById('reconnectBtn');
 
-        // 使用者發送訊息
-        function sendMessage() {
-            const message = messageInput.value.trim();
-            if (!message) return;
-
-            // 1. 隱藏歡迎訊息
-            if (welcomeMsg) welcomeMsg.style.display = 'none';
-
-            // 2. 顯示使用者的訊息（靠右、橘色）
-            appendMessage(message, 'user');
-            messageInput.value = '';
-
-            // 3. 讓按鈕暫時不能按，假裝機器人在思考
-            sendBtn.disabled = true;
-            sendBtn.innerText = '對方輸入中...';
-            sendBtn.classList.add('opacity-50');
-
-            // 4. 設定 1 秒後機器人自動回覆
-            setTimeout(() => {
-                botReply(message);
-                sendBtn.disabled = false;
-                sendBtn.innerText = '送出';
-                sendBtn.classList.remove('opacity-50');
-            }, 1000);
-        }
-
-        // 機器人的「大腦」邏輯（你可以自己新增關鍵字！）
-        function botReply(userText) {
-            let replyText = "";
-            let text = userText.toLowerCase(); // 轉小寫方便比對
-
-            // 這裡設定機器人的回答規則
-            if (text.includes("hello") || text.includes("你好") || text.includes("hi")) {
-                replyText = "你好呀！我是 Sam 機器人 🤖，很高興認識你！有什麼我可以幫忙的嗎？";
-            } else if (text.includes("天氣")) {
-                replyText = "我沒辦法看窗外，但我猜今天是個寫程式的好日子！😎";
-            } else if (text.includes("你是誰")) {
-                replyText = "我是由何玴瑋開發介面，並由簡易 JavaScript 驅動的聊天助理喔！";
-            } else {
-                replyText = `你剛剛說了：「${userText}」，對吧？不過我的詞彙量還不夠多，我目前只能聽得懂 hello 喔！`;
+        // 【功能 1】連接到 ntfy.sh 接收頻道 (SSE 機制)
+        function connectToRoom() {
+            const topic = topicInput.value.trim() || 'aokinoko-room';
+            displayRoomName.innerText = `公開群組：${topic}`;
+            
+            // 如果已經有連線，先關閉舊的
+            if (eventSource) {
+                eventSource.close();
             }
 
-            // 顯示機器人的訊息（靠左、深色）
-            appendMessage(replyText, 'bot');
+            // 建立新的持續性連線 (Server-Sent Events)
+            statusText.innerText = `正在連接房號 [${topic}]...`;
+            eventSource = new EventSource(`https://ntfy.sh/${topic}/sse`);
+
+            eventSource.onopen = () => {
+                statusText.innerText = `🟢 已成功連線至 [${topic}]，可以開始聊天了！`;
+            };
+
+            // 當收到群組裡任何人的訊息時
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                
+                // 確認這是一個「訊息」事件
+                if (data.event === 'message') {
+                    try {
+                        // 我們發送的訊息會打包成 JSON 格式 { clientId, nickname, text }
+                        const payload = JSON.parse(data.message);
+                        
+                        // 如果這則訊息的 ID 不是我自己的，代表是「別人」傳的，就顯示在左邊
+                        if (payload.clientId !== myClientId) {
+                            appendMessage(payload.text, 'other', payload.nickname);
+                        }
+                    } catch (e) {
+                        // 如果有人用別的軟體傳純文字進來，沒有 JSON 格式
+                        appendMessage(data.message, 'other', '匿名用戶');
+                    }
+                }
+            };
+
+            eventSource.onerror = () => {
+                statusText.innerText = `🔴 連線中斷，正在嘗試重新連線...`;
+            };
         }
 
-        // 負責把訊息畫到畫面上的函數
-        function appendMessage(text, sender) {
+        // 【功能 2】發送訊息到群組
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            const nickname = nicknameInput.value.trim() || '無名氏';
+            const topic = topicInput.value.trim() || 'aokinoko-room';
+
+            if (!text) return;
+
+            // 1. 先把自己的訊息畫在畫面的「右邊」
+            appendMessage(text, 'me', nickname);
+            messageInput.value = ''; // 清空輸入框
+
+            // 2. 將訊息打包 (包含誰傳的、內容是什麼、我的專屬ID)
+            const payload = {
+                clientId: myClientId,
+                nickname: nickname,
+                text: text
+            };
+
+            // 3. 發送到 ntfy 伺服器，廣播給所有人
+            try {
+                await fetch(`https://ntfy.sh/${topic}`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+            } catch (error) {
+                console.error("發送失敗", error);
+                appendMessage("⚠️ 系統提示：剛剛的訊息發送失敗，請檢查網路。", 'system');
+            }
+        }
+
+        // 【功能 3】將訊息畫到畫面上 (分左邊跟右邊)
+        function appendMessage(text, senderType, senderName = '') {
             const msgContainer = document.createElement('div');
             const timeString = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
 
-            if (sender === 'user') {
-                // 使用者樣式 (右側)
-                msgContainer.className = 'flex justify-end';
+            if (senderType === 'me') {
+                // 自己傳的訊息 (右邊橘色)
+                msgContainer.className = 'flex flex-col items-end mb-4';
                 msgContainer.innerHTML = `
+                    <div class="text-[11px] text-gray-500 mb-1 mr-1">${senderName}</div>
                     <div class="max-w-[70%] bg-[#2a1708] border border-orange-900/50 text-white px-5 py-3 rounded-2xl rounded-tr-sm text-sm shadow-lg">
                         ${text}
                         <div class="text-[10px] text-orange-600/60 text-right mt-1">${timeString}</div>
                     </div>
                 `;
-            } else {
-                // 機器人樣式 (左側)
-                msgContainer.className = 'flex justify-start';
+            } else if (senderType === 'other') {
+                // 別人傳的訊息 (左邊灰色)
+                msgContainer.className = 'flex flex-col items-start mb-4';
+                
+                // 隨機產生一個頭像字母
+                const avatarLetter = senderName.charAt(0).toUpperCase() || '?';
+                
                 msgContainer.innerHTML = `
-                    <div class="max-w-[70%] bg-[#1c1917] border border-[#292524] text-gray-200 px-5 py-3 rounded-2xl rounded-tl-sm text-sm shadow-lg">
-                        ${text}
-                        <div class="text-[10px] text-gray-500 text-left mt-1">${timeString}</div>
+                    <div class="flex items-end gap-2 max-w-[70%]">
+                        <div class="w-8 h-8 rounded-full bg-teal-800 flex-shrink-0 flex items-center justify-center text-white text-xs font-bold mb-1 shadow-lg">
+                            ${avatarLetter}
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="text-[11px] text-gray-400 mb-1 ml-1">${senderName}</div>
+                            <div class="bg-[#1c1917] border border-[#292524] text-gray-200 px-5 py-3 rounded-2xl rounded-tl-sm text-sm shadow-lg">
+                                ${text}
+                                <div class="text-[10px] text-gray-500 text-left mt-1">${timeString}</div>
+                            </div>
+                        </div>
                     </div>
                 `;
+            } else {
+                // 系統提示訊息 (置中)
+                msgContainer.className = 'flex justify-center mb-4';
+                msgContainer.innerHTML = `<span class="px-4 py-1.5 bg-red-900/20 text-red-400 border border-red-900/50 rounded-full text-[11px]">${text}</span>`;
             }
             
             messageDisplay.appendChild(msgContainer);
             messageDisplay.scrollTop = messageDisplay.scrollHeight; // 自動捲動到底部
         }
 
+        // 綁定事件
         sendBtn.addEventListener('click', sendMessage);
         messageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -175,6 +241,15 @@
                 sendMessage();
             }
         });
+        
+        reconnectBtn.addEventListener('click', () => {
+            messageDisplay.innerHTML = ''; // 清空畫面
+            connectToRoom();
+        });
+
+        // 網頁載入時，自動連線到預設房號
+        window.addEventListener('DOMContentLoaded', connectToRoom);
+
     </script>
 </body>
 </html>
