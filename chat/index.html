@@ -3,30 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aokinoko Chat - ntfy.sh Client</title>
-    <!-- 引入 Tailwind CSS CDN -->
+    <title>Aokinoko Chat - AI Bot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 FontAwesome 圖示 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', 'Microsoft JhengHei', sans-serif;
-            background-color: #0c0a09;
-        }
-        
-        .glass-card {
-            background: rgba(28, 25, 23, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .orange-glow {
-            box-shadow: 0 0 20px 2px rgba(234, 88, 12, 0.3);
-        }
-        
+        body { font-family: 'Inter', 'Microsoft JhengHei', sans-serif; background-color: #0c0a09; }
+        .glass-card { background: rgba(28, 25, 23, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .orange-glow { box-shadow: 0 0 20px 2px rgba(234, 88, 12, 0.3); }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #292524; border-radius: 10px; }
@@ -35,9 +20,8 @@
 <body class="text-gray-300 h-screen overflow-hidden">
 
     <div class="flex h-full">
-        <!-- ================= 左側邊欄 ================= -->
+        <!-- 左側邊欄 -->
         <aside class="w-80 border-r border-[#292524] flex flex-col p-6 gap-6 overflow-y-auto custom-scrollbar">
-            
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-orange-600 flex items-center justify-center text-white text-xl font-bold orange-glow">5</div>
                 <div>
@@ -47,65 +31,45 @@
             </div>
 
             <div class="glass-card rounded-2xl p-4 space-y-4">
-                <h2 class="text-xs font-bold text-gray-400">ntfy.sh 設定</h2>
-                <div class="space-y-2">
-                    <label class="text-[11px] text-gray-500">推播頻道 (Topic)</label>
-                    <input id="topicInput" type="text" value="aokinoko" 
-                        class="w-full bg-[#0c0a09] border border-[#292524] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-600 transition-colors">
-                </div>
-            </div>
-
-            <div class="glass-card rounded-2xl p-4 space-y-4">
-                <h2 class="text-xs font-bold text-gray-400">聊天概況</h2>
+                <h2 class="text-xs font-bold text-gray-400">連線狀態</h2>
                 <div class="grid grid-cols-2 gap-2">
                     <div class="bg-[#0c0a09] p-3 rounded-xl border border-[#292524]">
-                        <span class="text-[10px] text-gray-500 block">在線狀態</span>
-                        <span class="text-sm font-semibold text-white">已連線</span>
+                        <span class="text-[10px] text-gray-500 block">對象</span>
+                        <span class="text-sm font-semibold text-white">Sam 機器人</span>
                     </div>
                     <div class="bg-[#0c0a09] p-3 rounded-xl border border-[#292524]">
                         <span class="text-[10px] text-gray-500 block">模式</span>
-                        <span class="text-sm font-semibold text-white">聊天</span>
+                        <span class="text-sm font-semibold text-white">自動回覆</span>
                     </div>
-                </div>
-            </div>
-
-            <div class="mt-auto">
-                <h2 class="text-xs font-bold text-gray-400 mb-2">聯絡人</h2>
-                <div class="glass-card rounded-2xl p-3 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-orange-600/10 flex items-center justify-center"><span class="text-orange-600 font-bold">UX</span></div>
-                    <div class="flex-1">
-                        <div class="text-xs font-bold text-white">視覺夥伴</div>
-                        <div class="text-[10px] text-gray-500">提供配色與互動提示</div>
-                    </div>
-                    <div class="w-2 h-2 rounded-full bg-orange-600"></div>
                 </div>
             </div>
         </aside>
 
-        <!-- ================= 右側主畫面 ================= -->
+        <!-- 右側主畫面 -->
         <main class="flex-1 flex flex-col relative bg-[#0c0a09]">
             
             <header class="h-20 border-b border-[#292524] flex items-center justify-between px-8 z-10">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 rounded-full bg-teal-800 flex items-center justify-center text-white font-bold">S</div>
                     <div>
-                        <div class="text-white font-semibold" id="displayTopic">Sam 聊天視窗</div>
-                        <div class="text-[11px] text-gray-500">即時連線 • 128 位元安全連線</div>
+                        <div class="text-white font-semibold">Sam 聊天視窗</div>
+                        <div class="text-[11px] text-green-500">● 機器人已在線，準備好聊天了！</div>
                     </div>
                 </div>
             </header>
 
-            <div id="messageDisplay" class="flex-1 overflow-y-auto p-8 flex flex-col gap-6 custom-scrollbar">
+            <div id="messageDisplay" class="flex-1 overflow-y-auto p-8 flex flex-col gap-4 custom-scrollbar">
                 <div class="flex justify-center mt-auto mb-4">
                     <span class="px-4 py-1.5 bg-[#1c1917] border border-[#292524] rounded-full text-[11px] text-gray-400">今天</span>
                 </div>
                 
-                <div class="mx-auto w-full max-w-xl glass-card p-6 rounded-2xl text-center mb-6">
-                    <p class="text-sm text-gray-400 mb-4">尚無訊息，請輸入內容並送出，或等待 <span id="topicHint" class="text-orange-500">aokinoko</span> 頻道的新訊息。</p>
-                    <div class="text-[10px] text-gray-600 text-left">系統 • 現在</div>
+                <!-- 初始系統訊息 -->
+                <div class="mx-auto w-full max-w-xl glass-card p-6 rounded-2xl text-center mb-6" id="welcomeMsg">
+                    <p class="text-sm text-gray-400 mb-4">跟 Sam 說聲 Hello 吧！</p>
                 </div>
             </div>
 
+            <!-- 輸入區 -->
             <div class="p-8 pt-0">
                 <div class="max-w-4xl mx-auto space-y-4">
                     <div class="bg-[#1c1917] border border-[#292524] rounded-full p-2 flex items-center gap-2">
@@ -122,64 +86,86 @@
         </main>
     </div>
 
-    <!-- ================= 讓按鈕可以動的 JavaScript 程式碼 ================= -->
+    <!-- ================= 機器人聊天邏輯 ================= -->
     <script>
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
-        const topicInput = document.getElementById('topicInput');
-        const topicHint = document.getElementById('topicHint');
         const messageDisplay = document.getElementById('messageDisplay');
+        const welcomeMsg = document.getElementById('welcomeMsg');
 
-        topicInput.addEventListener('input', () => {
-            topicHint.innerText = topicInput.value || 'aokinoko';
-        });
-
-        async function sendMessage() {
+        // 使用者發送訊息
+        function sendMessage() {
             const message = messageInput.value.trim();
-            const topic = topicInput.value.trim() || 'aokinoko';
-
             if (!message) return;
 
+            // 1. 隱藏歡迎訊息
+            if (welcomeMsg) welcomeMsg.style.display = 'none';
+
+            // 2. 顯示使用者的訊息（靠右、橘色）
+            appendMessage(message, 'user');
+            messageInput.value = '';
+
+            // 3. 讓按鈕暫時不能按，假裝機器人在思考
             sendBtn.disabled = true;
-            sendBtn.innerText = '傳送中...';
+            sendBtn.innerText = '對方輸入中...';
             sendBtn.classList.add('opacity-50');
 
-            try {
-                // 這裡已經把會導致網路錯誤的 headers 移除了，改成最簡單的 POST 請求
-                const response = await fetch(`https://ntfy.sh/${topic}`, {
-                    method: 'POST',
-                    body: message
-                });
-
-                if (response.ok) {
-                    appendMessageToChat(message);
-                    messageInput.value = '';
-                } else {
-                    alert('發送失敗，伺服器無回應。');
-                }
-            } catch (error) {
-                console.error('錯誤:', error);
-                alert('網路錯誤！這通常是因為瀏覽器的擋廣告套件攔截了連線，請嘗試關閉擋廣告外掛或使用無痕模式測試。');
-            } finally {
+            // 4. 設定 1 秒後機器人自動回覆
+            setTimeout(() => {
+                botReply(message);
                 sendBtn.disabled = false;
                 sendBtn.innerText = '送出';
                 sendBtn.classList.remove('opacity-50');
-            }
+            }, 1000);
         }
 
-        function appendMessageToChat(text) {
+        // 機器人的「大腦」邏輯（你可以自己新增關鍵字！）
+        function botReply(userText) {
+            let replyText = "";
+            let text = userText.toLowerCase(); // 轉小寫方便比對
+
+            // 這裡設定機器人的回答規則
+            if (text.includes("hello") || text.includes("你好") || text.includes("hi")) {
+                replyText = "你好呀！我是 Sam 機器人 🤖，很高興認識你！有什麼我可以幫忙的嗎？";
+            } else if (text.includes("天氣")) {
+                replyText = "我沒辦法看窗外，但我猜今天是個寫程式的好日子！😎";
+            } else if (text.includes("你是誰")) {
+                replyText = "我是由何玴瑋開發介面，並由簡易 JavaScript 驅動的聊天助理喔！";
+            } else {
+                replyText = `你剛剛說了：「${userText}」，對吧？不過我的詞彙量還不夠多，我目前只能聽得懂 hello 喔！`;
+            }
+
+            // 顯示機器人的訊息（靠左、深色）
+            appendMessage(replyText, 'bot');
+        }
+
+        // 負責把訊息畫到畫面上的函數
+        function appendMessage(text, sender) {
             const msgContainer = document.createElement('div');
-            msgContainer.className = 'flex justify-end mb-4';
             const timeString = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
 
-            msgContainer.innerHTML = `
-                <div class="max-w-[70%] bg-[#2a1708] border border-orange-900/50 text-white px-5 py-3 rounded-2xl rounded-tr-sm text-sm shadow-lg">
-                    ${text}
-                    <div class="text-[10px] text-orange-600/60 text-right mt-1">${timeString}</div>
-                </div>
-            `;
+            if (sender === 'user') {
+                // 使用者樣式 (右側)
+                msgContainer.className = 'flex justify-end';
+                msgContainer.innerHTML = `
+                    <div class="max-w-[70%] bg-[#2a1708] border border-orange-900/50 text-white px-5 py-3 rounded-2xl rounded-tr-sm text-sm shadow-lg">
+                        ${text}
+                        <div class="text-[10px] text-orange-600/60 text-right mt-1">${timeString}</div>
+                    </div>
+                `;
+            } else {
+                // 機器人樣式 (左側)
+                msgContainer.className = 'flex justify-start';
+                msgContainer.innerHTML = `
+                    <div class="max-w-[70%] bg-[#1c1917] border border-[#292524] text-gray-200 px-5 py-3 rounded-2xl rounded-tl-sm text-sm shadow-lg">
+                        ${text}
+                        <div class="text-[10px] text-gray-500 text-left mt-1">${timeString}</div>
+                    </div>
+                `;
+            }
+            
             messageDisplay.appendChild(msgContainer);
-            messageDisplay.scrollTop = messageDisplay.scrollHeight;
+            messageDisplay.scrollTop = messageDisplay.scrollHeight; // 自動捲動到底部
         }
 
         sendBtn.addEventListener('click', sendMessage);
