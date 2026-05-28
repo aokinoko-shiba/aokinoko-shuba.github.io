@@ -12,7 +12,6 @@
             --calc-color: #e67e22;
             --ai-color: #9b59b6;
             --chat-color: #ea580c; /* ntfy 聊天對話窗的專屬橘色 */
-            --note-color: #00ffaa; /* 酷炫黑客記事本的霓虹青色 */
             --gas-color: #1d6f42;  /* Google Apps Script 企業綠色 */
             --bg-color: #f8f9fa;
             --text-color: #333333;
@@ -54,7 +53,7 @@
 
         /* 內容容器 */
         .container {
-            max-width: 1200px; /* 擴大容器以容納三欄佈局 */
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -119,7 +118,7 @@
             color: #666;
             margin-bottom: 1.5rem;
             font-size: 0.95rem;
-            min-height: 4.5em; /* 統一卡片描述文字高度 */
+            min-height: 4.5em; /* 統一卡片描述文字高度，排版更整齊 */
         }
 
         /* 各別按鈕樣式 */
@@ -139,33 +138,28 @@
             transform: scale(1.03);
         }
 
-        /* 1. 賽博極簡記事本 */
-        .card-note { border-top-color: #10b981; }
-        .btn-note { background-color: #10b981; box-shadow: 0 2px 5px rgba(16, 185, 129, 0.2); }
-        .project-card.card-note:hover { border-top-color: var(--note-color); box-shadow: 0 12px 30px rgba(0, 255, 170, 0.15); }
-
-        /* 2. GAS 雲端同步記事本 */
+        /* 1. GAS 雲端同步記事本 */
         .card-gas { border-top-color: var(--gas-color); }
         .btn-gas { background-color: var(--gas-color); box-shadow: 0 2px 5px rgba(29, 111, 66, 0.2); }
         .project-card.card-gas:hover { box-shadow: 0 12px 30px rgba(29, 111, 66, 0.2); }
 
-        /* 3. ntfy 聊天室 */
+        /* 2. ntfy 聊天室 */
         .card-chat { border-top-color: var(--chat-color); }
         .btn-chat { background-color: var(--chat-color); }
 
-        /* 4. 打地鼠遊戲 */
+        /* 3. 打地鼠遊戲 */
         .card-mole { border-top-color: var(--secondary-color); }
         .btn-mole { background-color: var(--secondary-color); }
 
-        /* 5. 復古貪吃蛇 */
+        /* 4. 復古貪吃蛇 */
         .card-snake { border-top-color: #2ecc71; }
         .btn-snake { background-color: #2ecc71; }
 
-        /* 6. 工程計算機 */
+        /* 5. 工程計算機 */
         .card-calc { border-top-color: var(--calc-color); }
         .btn-calc { background-color: var(--calc-color); }
 
-        /* 7. AI 智慧助理 */
+        /* 6. AI 智慧助理 */
         .card-ai { border-top-color: var(--ai-color); }
         .btn-ai { background-color: var(--ai-color); }
 
@@ -202,15 +196,6 @@
 
         <div class="projects-grid">
             
-            <!-- 專案 1：賽博極簡記事本 -->
-            <a href="notebook.html" class="project-card card-note">
-                <div class="project-icon">📝</div>
-                <h3 style="color: #059669;">賽博極簡記事本</h3>
-                <p>具備專注模式、字數即時計算與本地端 LocalStorage 永續快取的黑客風前端文字編輯器。</p>
-                <span class="btn btn-note">開啟記事本</span>
-            </a>
-
-            <!-- 專案 2：GAS 雲端同步記事本 (這裡已經幫你填好最新、會成功的 exec 網址！) -->
             <a href="https://script.google.com/macros/s/AKfycbzFrjIryxKDqfWOhy9J32USiuCCD_R6o-TIbsRqYIyf1lLGeR6qePzsHQqA2gMlll30/exec" target="_blank" class="project-card card-gas">
                 <div class="project-icon">☁️</div>
                 <h3 style="color: var(--gas-color);">GAS 雲端全端記事本</h3>
@@ -218,7 +203,6 @@
                 <span class="btn btn-gas">前往雲端存取</span>
             </a>
             
-            <!-- 專案 3：ntfy 聊天室 -->
             <a href="chat/index.html" class="project-card card-chat">
                 <div class="project-icon">💬</div>
                 <h3 style="color: var(--chat-color);">ntfy 聊天對話窗</h3>
@@ -226,7 +210,6 @@
                 <span class="btn btn-chat">進入聊天室</span>
             </a>
 
-            <!-- 專案 4：打地鼠遊戲 -->
             <a href="1/index.html" class="project-card card-mole">
                 <div class="project-icon">🐹</div>
                 <h3 style="color: var(--secondary-color);">打地鼠遊戲</h3>
@@ -234,7 +217,6 @@
                 <span class="btn btn-mole">開始挑戰</span>
             </a>
 
-            <!-- 專案 5：復古貪吃蛇 -->
             <a href="2/snake.html" class="project-card card-snake">
                 <div class="project-icon">🐍</div>
                 <h3 style="color: #2ecc71;">復古貪吃蛇</h3>
@@ -242,7 +224,6 @@
                 <span class="btn btn-snake">立即遊玩</span>
             </a>
 
-            <!-- 專案 6：工程計算機 -->
             <a href="calculator/index.html" class="project-card card-calc">
                 <div class="project-icon">🧮</div>
                 <h3 style="color: var(--calc-color);">工程計算機</h3>
@@ -250,7 +231,6 @@
                 <span class="btn btn-calc">開啟工具</span>
             </a>
 
-            <!-- 專案 7：AI 智慧助理 -->
             <a href="ai-chat/index.html" class="project-card card-ai">
                 <div class="project-icon">✨</div>
                 <h3 style="color: var(--ai-color);">AI 智慧助理</h3>
