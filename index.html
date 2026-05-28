@@ -12,7 +12,8 @@
             --calc-color: #e67e22;
             --ai-color: #9b59b6;
             --chat-color: #ea580c; /* ntfy 聊天對話窗的專屬橘色 */
-            --note-color: #00ffaa; /* 新增：酷炫黑客記事本的霓虹青色 */
+            --note-color: #00ffaa; /* 酷炫黑客記事本的霓虹青色 */
+            --gas-color: #1d6f42;  /* 新增：Google Apps Script 企業綠色 */
             --bg-color: #f8f9fa;
             --text-color: #333333;
             --card-bg: #ffffff;
@@ -35,7 +36,7 @@
         header {
             background-color: var(--primary-color);
             color: white;
-            padding: 2rem 0;
+            padding: 2.5rem 0;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
@@ -43,6 +44,7 @@
         header h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
+            letter-spacing: 2px;
         }
 
         header p {
@@ -52,7 +54,7 @@
 
         /* 內容容器 */
         .container {
-            max-width: 1000px;
+            max-width: 1200px; /* 擴大容器以容納 3 欄佈局 */
             margin: 0 auto;
             padding: 2rem;
         }
@@ -75,11 +77,10 @@
             padding-bottom: 0.5rem;
         }
 
-        /* 作品集網格系統 */
+        /* 作品集網格系統 - 升級為三欄自動適應 */
         .projects-grid {
             display: grid;
-            /* 在桌面端顯示 2x2 或依空間自動排列 */
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
         }
 
@@ -110,14 +111,15 @@
         }
 
         .project-card h3 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-bottom: 1rem;
         }
 
         .project-card p {
             color: #666;
             margin-bottom: 1.5rem;
-            min-height: 3em;
+            font-size: 0.95rem;
+            min-height: 4.5em; /* 讓不同卡片的描述對齊文字高度 */
         }
 
         /* 各別按鈕樣式 */
@@ -126,45 +128,46 @@
             padding: 0.8rem 2rem;
             border-radius: 30px;
             font-weight: bold;
-            width: 80%;
-            transition: opacity 0.3s;
-        }
-
-        /* 1. 打地鼠樣式 */
-        .card-mole { border-top-color: var(--secondary-color); }
-        .btn-mole { background-color: var(--secondary-color); }
-
-        /* 2. 貪吃蛇樣式 */
-        .card-snake { border-top-color: #2ecc71; }
-        .btn-snake { background-color: #2ecc71; }
-
-        /* 3. 計算機樣式 */
-        .card-calc { border-top-color: var(--calc-color); }
-        .btn-calc { background-color: var(--calc-color); }
-
-        /* 4. AI 機器人樣式 */
-        .card-ai { border-top-color: var(--ai-color); }
-        .btn-ai { background-color: var(--ai-color); }
-
-        /* 5. ntfy 聊天室樣式 */
-        .card-chat { border-top-color: var(--chat-color); }
-        .btn-chat { background-color: var(--chat-color); }
-
-        /* 6. 記事本樣式 */
-        .card-note { border-top-color: #16a34a; } /* 預設深綠色 */
-        .btn-note { 
-            background-color: #10b981; 
-            box-shadow: 0 2px 5px rgba(16, 185, 129, 0.2);
-        }
-        /* 特別為記事本滑過時加上科技感外陰影 */
-        .project-card.card-note:hover {
-            border-top-color: var(--note-color);
-            box-shadow: 0 12px 30px rgba(0, 255, 170, 0.15);
+            width: 85%;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-top: auto; /* 確保按鈕永遠在卡片最底部對齊 */
         }
 
         .project-card:hover .btn {
             opacity: 0.9;
+            transform: scale(1.03);
         }
+
+        /* 1. 賽博極簡記事本 */
+        .card-note { border-top-color: #10b981; }
+        .btn-note { background-color: #10b981; box-shadow: 0 2px 5px rgba(16, 185, 129, 0.2); }
+        .project-card.card-note:hover { border-top-color: var(--note-color); box-shadow: 0 12px 30px rgba(0, 255, 170, 0.15); }
+
+        /* 2. GAS 雲端同步記事本 (新加入) */
+        .card-gas { border-top-color: var(--gas-color); }
+        .btn-gas { background-color: var(--gas-color); box-shadow: 0 2px 5px rgba(29, 111, 66, 0.2); }
+        .project-card.card-gas:hover { box-shadow: 0 12px 30px rgba(29, 111, 66, 0.2); }
+
+        /* 3. ntfy 聊天室 */
+        .card-chat { border-top-color: var(--chat-color); }
+        .btn-chat { background-color: var(--chat-color); }
+
+        /* 4. 打地鼠遊戲 */
+        .card-mole { border-top-color: var(--secondary-color); }
+        .btn-mole { background-color: var(--secondary-color); }
+
+        /* 5. 復古貪吃蛇 */
+        .card-snake { border-top-color: #2ecc71; }
+        .btn-snake { background-color: #2ecc71; }
+
+        /* 6. 工程計算機 */
+        .card-calc { border-top-color: var(--calc-color); }
+        .btn-calc { background-color: var(--calc-color); }
+
+        /* 7. AI 智慧助理 */
+        .card-ai { border-top-color: var(--ai-color); }
+        .btn-ai { background-color: var(--ai-color); }
 
         /* 頁尾 */
         footer {
@@ -174,7 +177,7 @@
         }
 
         /* 手機版適應 */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .projects-grid {
                 grid-template-columns: 1fr;
             }
@@ -202,42 +205,49 @@
             <a href="notebook.html" class="project-card card-note">
                 <div class="project-icon">📝</div>
                 <h3 style="color: #059669;">賽博極簡記事本</h3>
-                <p>具備專注模式、字數即時計算與本地端永續快取的黑客風文字編輯器。</p>
+                <p>具備專注模式、字數即時計算與本地端 LocalStorage 永續快取的黑客風前端文字編輯器。</p>
                 <span class="btn btn-note">開啟記事本</span>
+            </a>
+
+            <a href="https://script.google.com/macros/s/AKfycb...你的專屬網址.../exec" target="_blank" class="project-card card-gas">
+                <div class="project-icon">☁️</div>
+                <h3 style="color: var(--gas-color);">GAS 雲端全端記事本</h3>
+                <p>整合 Google Apps Script 與原生 DriveApp，實現單一腳本全端網頁架構，支援自動檔案建立與遠端 Google 雲端硬碟即時同步儲存。</p>
+                <span class="btn btn-gas">前往雲端存取</span>
             </a>
             
             <a href="chat/index.html" class="project-card card-chat">
                 <div class="project-icon">💬</div>
                 <h3 style="color: var(--chat-color);">ntfy 聊天對話窗</h3>
-                <p>深色賽博龐克風格介面，整合 ntfy.sh 即時推播服務。</p>
+                <p>深色賽博龐克風格介面，整合 ntfy.sh 即時推播服務，實現跨裝置極速通訊。</p>
                 <span class="btn btn-chat">進入聊天室</span>
             </a>
 
             <a href="1/index.html" class="project-card card-mole">
                 <div class="project-icon">🐹</div>
                 <h3 style="color: var(--secondary-color);">打地鼠遊戲</h3>
-                <p>考驗反應速度的經典小遊戲，挑戰你的最高分數！</p>
+                <p>考驗反應速度的經典小遊戲，運用精準的 JavaScript 定時器控制，挑戰你的最高分數！</p>
                 <span class="btn btn-mole">開始挑戰</span>
             </a>
 
             <a href="2/snake.html" class="project-card card-snake">
                 <div class="project-icon">🐍</div>
                 <h3 style="color: #2ecc71;">復古貪吃蛇</h3>
-                <p>運用鍵盤操控，吃掉紅點不斷增長，挑戰生存極限。</p>
+                <p>純前端 Canvas 技術刻製，運用鍵盤事件監聽操控，吃掉紅點不斷增長，挑戰生存極限。</p>
                 <span class="btn btn-snake">立即遊玩</span>
             </a>
 
             <a href="calculator/index.html" class="project-card card-calc">
                 <div class="project-icon">🧮</div>
                 <h3 style="color: var(--calc-color);">工程計算機</h3>
-                <p>支援三角函數與進階對數運算，簡潔高效的工具軟體。</p>
+                <p>前端邏輯縝密解析，支援三角函數與進階對數運算，提供簡潔高效的網頁工具軟體。</p>
                 <span class="btn btn-calc">開啟工具</span>
             </a>
 
             <a href="ai-chat/index.html" class="project-card card-ai">
                 <div class="project-icon">✨</div>
                 <h3 style="color: var(--ai-color);">AI 智慧助理</h3>
-                <p>基於 Gemini 2.5 Flash 模型，實現即時智能對話功能。</p>
+                <p>基於 Gemini 2.5 Flash 模型，透過後端/前端非同步串接，實現高流暢度的即時智能對話功能。</p>
                 <span class="btn btn-ai">發起對話</span>
             </a>
 
