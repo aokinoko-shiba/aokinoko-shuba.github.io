@@ -1,181 +1,215 @@
-// 請在下方雙引號中填入你的 Google 雲端硬碟資料夾 ID
-const FOLDER_ID = "1JYz0hlOoGrwFhuOBoMmCfVcg1JjX96Kp"; 
-const FILE_NAME = "記事本.txt";
-
-/**
- * 網頁主進入點
- */
-function doGet() {
-  // 取得或建立檔案內容
-  const fileContent = getOrCreateFileContent();
-  
-  // 建立 HTML 介面
-  const htmlOutput = HtmlService.createHtmlOutput(buildHtmlPage(fileContent));
-  htmlOutput.setTitle("線上雲端記事本")
-            .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-  return htmlOutput;
-}
-
-/**
- * 透過 GAS 內建 DriveApp 讀取或建立檔案
- */
-function getOrCreateFileContent() {
-  try {
-    const folder = DriveApp.getFolderById(FOLDER_ID);
-    const files = folder.getFilesByName(FILE_NAME);
-    
-    if (files.hasNext()) {
-      const file = files.next();
-      return file.getAs("text/plain").getDataAsString();
-    } else {
-      // 找不到檔案則自動創建
-      const newFile = folder.createFile(FILE_NAME, "", MimeType.PLAIN_TEXT);
-      return "";
-    }
-  } catch (e) {
-    return "錯誤：無法存取資料夾，請檢查 ID 是否正確。系統訊息：" + e.toString();
-  }
-}
-
-/**
- * 後端儲存函式（供前端 JavaScript 呼叫）
- */
-function saveFileContent(content) {
-  try {
-    const folder = DriveApp.getFolderById(FOLDER_ID);
-    const files = folder.getFilesByName(FILE_NAME);
-    
-    if (files.hasNext()) {
-      const file = files.next();
-      file.setContent(content);
-      return "儲存成功！時間：" + new Date().toLocaleTimeString();
-    } else {
-      // 防呆：如果中途檔案被刪除，則重新建立
-      folder.createFile(FILE_NAME, content, MimeType.PLAIN_TEXT);
-      return "原檔案遺失，已重新建立並儲存成功！";
-    }
-  } catch (e) {
-    return "儲存失敗：" + e.toString();
-  }
-}
-
-/**
- * 將前端 HTML/CSS/JS 封裝在同一個字串中輸出
- */
-function buildHtmlPage(initialContent) {
-  // 逸出特殊字元，避免 JSON 解析失敗
-  const safeContent = JSON.stringify(initialContent);
-
-  return `
-  <!DOCTYPE html>
-  <html>
-  <head>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
     <meta charset="UTF-8">
-    <title>線上雲端記事本</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>賽博極簡記事本</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        background-color: #f5f5f5;
-      }
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      }
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-      }
-      h2 { margin: 0; color: #333; }
-      #saveBtn {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      #saveBtn:hover { background-color: #45a049; }
-      #saveBtn:disabled { background-color: #cccccc; cursor: not-allowed; }
-      #editor {
-        width: 100%;
-        height: 450px;
-        padding: 10px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-        line-height: 1.5;
-        resize: vertical;
-      }
-      #status {
-        margin-top: 10px;
-        font-size: 14px;
-        color: #666;
-        font-style: italic;
-      }
-    </style>
-  </head>
-  <body>
+        /* 賽博黑客風格配色 */
+        :root {
+            --bg-color: #0b0f19;
+            --container-bg: #111827;
+            --text-color: #e5e7eb;
+            --neon-green: #00ffaa;
+            --neon-glow: rgba(0, 255, 170, 0.2);
+            --border-color: #374151;
+        }
 
-    <div class="container">
-      <div class="header">
-        <h2>雲端記事本 (${FILE_NAME})</h2>
-        <button id="saveBtn" onclick="saveData()">Save</button>
-      </div>
-      
-      <textarea id="editor" placeholder="在此輸入內容..."></textarea>
-      
-      <div id="status">狀態：載入成功</div>
+        body.focus-mode {
+            background-color: #05070c;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace, "Microsoft JhengHei";
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background 0.5s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+        }
+
+        .container.focus-hide {
+            border-color: transparent;
+            box-shadow: none;
+            background-color: transparent;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            transition: opacity 0.5s ease;
+        }
+
+        .header.hidden { opacity: 0.05; }
+        .header.hidden:hover { opacity: 1; }
+
+        h2 {
+            margin: 0;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-glow);
+            font-size: 1.5rem;
+        }
+
+        .btn-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 8px var(--neon-glow);
+        }
+
+        button.active {
+            background-color: var(--neon-green);
+            color: #000;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        textarea {
+            width: 100%;
+            height: 450px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            box-sizing: border-box;
+            color: #fff;
+            font-size: 16px;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        textarea:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-glow);
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #9ca3af;
+            transition: opacity 0.5s ease;
+        }
+
+        .footer.hidden { opacity: 0.05; }
+        .footer.hidden:hover { opacity: 1; }
+
+        #save-status {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+        <div class="header" id="editor-header">
+            <h2>> CYBER_NOTEBOOK.EXE</h2>
+            <div class="btn-box">
+                <button id="focus-btn" onclick="toggleFocusMode()">專注模式</button>
+                <button onclick="clearText()">清空</button>
+            </div>
+        </div>
+        
+        <textarea id="editor" placeholder="在此輸入黑客密碼或隨手筆記..." oninput="updateStats()"></textarea>
+        
+        <div class="footer" id="editor-footer">
+            <div id="char-count">字數：0 字</div>
+            <div id="save-status">狀態：已從本地端載入歷史快取</div>
+        </div>
     </div>
 
     <script>
-      // 載入後端傳入的初始內容
-      const initialContent = ${safeContent};
-      const editor = document.getElementById('editor');
-      const statusDiv = document.getElementById('status');
-      const saveBtn = document.getElementById('saveBtn');
+        const editor = document.getElementById('editor');
+        const charCount = document.getElementById('char-count');
+        const saveStatus = document.getElementById('save-status');
+        const header = document.getElementById('editor-header');
+        const footer = document.getElementById('editor-footer');
+        const container = document.getElementById('main-container');
+        const focusBtn = document.getElementById('focus-btn');
 
-      editor.value = initialContent;
+        // 1. 本地端永續快取 (LocalStorage)：網頁打開時自動讀取
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedContent = localStorage.getItem('cyber_notebook_content');
+            if (savedContent) {
+                editor.value = savedContent;
+            }
+            updateStats();
+        });
 
-      // 監聽內容變動，提示未儲存狀態
-      editor.addEventListener('input', () => {
-        statusDiv.innerText = "狀態：內容已修改，尚未儲存...";
-        statusDiv.style.color = "#d9534f";
-      });
+        // 2. 即時計算字數與自動快取儲存
+        function updateStats() {
+            const text = editor.value;
+            
+            // 計算字數
+            charCount.innerText = "字數：" + text.length + " 字";
+            
+            // 寫入瀏覽器 LocalStorage 快取
+            localStorage.setItem('cyber_notebook_content', text);
+            
+            saveStatus.innerText = "狀態：快取已同步";
+            saveStatus.style.color = "#00ffaa";
+        }
 
-      // 呼叫 GAS 後端儲存
-      function saveData() {
-        saveBtn.disabled = true;
-        statusDiv.innerText = "狀態：正在儲存到 Google 雲端...";
-        statusDiv.style.color = "#666";
+        // 3. 專注模式切換 (隱藏上下邊欄與外框)
+        function toggleFocusMode() {
+            document.body.classList.toggle('focus-mode');
+            container.classList.toggle('focus-hide');
+            header.classList.toggle('hidden');
+            footer.classList.toggle('hidden');
+            focusBtn.classList.toggle('active');
+            
+            if(focusBtn.classList.contains('active')) {
+                focusBtn.innerText = "退出專注";
+            } else {
+                focusBtn.innerText = "專注模式";
+            }
+        }
 
-        const currentContent = editor.value;
-
-        // 呼叫 GAS 後端函式
-        google.script.run
-          .withSuccessHandler(function(response) {
-            statusDiv.innerText = "狀態：" + response;
-            statusDiv.style.color = "#4CAF50";
-            saveBtn.disabled = false;
-          })
-          .withFailureHandler(function(error) {
-            statusDiv.innerText = "狀態：儲存發生嚴重錯誤 " + error;
-            statusDiv.style.color = "#f44336";
-            saveBtn.disabled = false;
-          })
-          .saveFileContent(currentContent);
-      }
+        // 4. 清空功能
+        function clearText() {
+            if(confirm("確定要清空所有內容嗎？(本地快取也會一併刪除)")) {
+                editor.value = "";
+                updateStats();
+                saveStatus.innerText = "狀態：已清空";
+            }
+        }
     </script>
-  </body>
-  </html>
-  `;
-}
+</body>
+</html>
