@@ -13,6 +13,7 @@
             --ai-color: #9b59b6;
             --chat-color: #ea580c; /* ntfy 聊天對話窗的專屬橘色 */
             --gas-color: #1d6f42;  /* Google Apps Script 企業綠色 */
+            --vocab-color: #1ea393; /* 英文單字測驗的專屬松石綠 */
             --bg-color: #f8f9fa;
             --text-color: #333333;
             --card-bg: #ffffff;
@@ -163,6 +164,10 @@
         .card-ai { border-top-color: var(--ai-color); }
         .btn-ai { background-color: var(--ai-color); }
 
+        /* 7. 英文單字測驗（新增項目） */
+        .card-vocab { border-top-color: var(--vocab-color); }
+        .btn-vocab { background-color: var(--vocab-color); }
+
         /* 頁尾 */
         footer {
             text-align: center;
@@ -236,6 +241,13 @@
                 <h3 style="color: var(--ai-color);">AI 智慧助理</h3>
                 <p>基於 Gemini 2.5 Flash 模型，透過後端/前端非同步串接，實現高流暢度的即時智能對話功能。</p>
                 <span class="btn btn-ai">發起對話</span>
+            </a>
+
+            <a href="7/index.html" class="project-card card-vocab">
+                <div class="project-icon">📝</div>
+                <h3 style="color: var(--vocab-color);">智慧英文單字測驗</h3>
+                <p>具備現代感雙色漸層的單字系統。支援即時答題對錯回饋、動態分數結算與題庫打亂技術。</p>
+                <span class="btn btn-vocab">開始測驗</span>
             </a>
 
         </div>
